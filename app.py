@@ -15,6 +15,7 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from dotenv import load_dotenv
+import resend
 
 load_dotenv()
 
@@ -42,7 +43,8 @@ DB_PATH = "users.db"
 # 2️⃣ FLASK APP INITIALIZATION
 # =========================================================
 app = Flask(__name__)
-app.secret_key = os.urandom(24)
+app.secret_key = os.environ.get("SECRET_KEY", "dev-secret-key")
+
 
 # =========================================================
 # 3️⃣ LOAD MODEL
@@ -72,34 +74,25 @@ def get_explainer():
 # =========================================================
 def send_alert(subject, html_body):
     if not SMTP_CONFIG["enabled"]:
-        return False, "SMTP disabled"
+        return False, "Email alerts disabled"
+
     try:
-        msg = MIMEMultipart("alternative")
-        msg['Subject'] = subject
-        msg['From']    = f"ShipmentSure Alerts <{SMTP_CONFIG['sender']}>"
-        msg['To']      = SMTP_CONFIG['receiver']
-        msg['Reply-To'] = SMTP_CONFIG['sender']
-        msg['X-Mailer'] = 'ShipmentSure v1.0'
+        resend.api_key = os.environ.get("RESEND_API_KEY")
 
-        # Plain-text fallback (reduces spam score)
-        plain_text = "ShipmentSure Alert: A shipment delay has been predicted. Please check the system for details."
-        msg.attach(MIMEText(plain_text, 'plain'))
+        params = {
+            "from": "ShipmentSure <onboarding@resend.dev>",
+            "to": [SMTP_CONFIG["receiver"]],
+            "subject": subject,
+            "html": html_body,
+        }
 
-        # HTML content
-        part = MIMEText(html_body, 'html')
-        msg.attach(part)
+        response = resend.Emails.send(params)
 
-        server = smtplib.SMTP(SMTP_CONFIG['smtp_server'], SMTP_CONFIG['smtp_port'])
-        server.ehlo()
-        server.starttls()
-        server.ehlo()
-        server.login(SMTP_CONFIG['sender'], SMTP_CONFIG['password'])
-        server.send_message(msg)
-        server.quit()
-        return True, "Sent"
+        return True, str(response)
+
     except Exception as e:
+        print(f"Email alert failed: {e}")
         return False, str(e)
-
 # =========================================================
 # 6️⃣ AUTHENTICATION (SQLite + Roles)
 # =========================================================
