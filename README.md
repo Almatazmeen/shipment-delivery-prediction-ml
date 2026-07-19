@@ -1,4 +1,4 @@
-# 🚀 ShipmentSure: Predictive Logistics Control Center
+#  ShipmentSure: Predictive Logistics Control Center
 
 ShipmentSure is an advanced, industry-level machine learning application designed to predict supply chain efficiency. It operates as a high-tech "Mission Control" dashboard that allows logistics operators to input shipment parameters and instantly receive an AI-driven probability of whether a package will arrive on time. 
 
@@ -6,7 +6,7 @@ Beyond simple predictions, ShipmentSure features Explainable AI (SHAP) to tell y
 
 ---
 
-## 🛠️ Technology Stack
+##  Technology Stack
 
 ### Backend & Machine Learning
 * **Python 3**: Core programming language.
@@ -14,7 +14,6 @@ Beyond simple predictions, ShipmentSure features Explainable AI (SHAP) to tell y
 * **XGBoost**: High-performance gradient boosting library used for the core classification model (`xgboost_shipment_model.pkl`).
 * **SHAP (Shapley Additive exPlanations)**: Used for Explainable AI (XAI). It breaks down the XGBoost prediction to show exactly which features (e.g., package weight, customer rating) contributed positively or negatively to the outcome.
 * **Pandas / Joblib**: Data manipulation and model loading.
-* **Folium**: Python library used to generate interactive leaflet maps (`map.html`) showing the theoretical origin/destination of the shipment based on warehouse block.
 * **SQLite3**: Lightweight relational database used to store operator credentials securely.
 
 ### Frontend
@@ -29,7 +28,7 @@ Beyond simple predictions, ShipmentSure features Explainable AI (SHAP) to tell y
 
 ---
 
-## 📂 Project Structure & Architecture
+## Project Structure & Architecture
 
 ```text
 ShipmentSure/
@@ -58,7 +57,7 @@ ShipmentSure/
 
 ---
 
-## ⚙️ Core Functionality & Features
+##  Core Functionality & Features
 
 ### 1. The Prediction Engine (`/predict`)
 Operators input 10 unique logistical parameters (e.g., Warehouse Block, Transit Mode, Prior Purchases, Discount Offered). The Flask backend passes this data to a Pandas DataFrame and feeds it to the XGBoost model. 
@@ -71,17 +70,15 @@ Instead of operating as a "black box," the application utilizes XGBoost's native
 ### 3. Automated Alert Relays (SMTP)
 If the AI detects a high risk of delay (binary prediction = `0`), the system automatically triggers an alert protocol. It logs into a secure Gmail SMTP server and sends a professionally formatted HTML email to the designated receiver, warning them of the potential supply chain bottleneck.
 
-### 4. Dynamic Route Mapping
-Depending on the selected Origin Warehouse (Blocks A-F), the `generate_map()` function uses **Folium** to plot a visual path from a simulated warehouse coordinates to a destination, generating an interactive HTML map embedded directly into the results flow.
 
-### 5. Role-Based Access Control & Admin Panel
+### 4. Role-Based Access Control & Admin Panel
 The application is secured by a login portal. Users are verified against `users.db`. 
 * **Standard Users** can run predictions.
 * **Admins** have access to the `/admin` routes. Here, they can dynamically toggle the global SMTP email alerts on/off without restarting the server, update the receiver email, and manage the operator roster (creating new user accounts and deleting old ones).
 
 ---
 
-## 🚀 How to Run & Work on the Project
+##  How to Run & Work on the Project
 
 ### Prerequisites
 1. Python 3.8+ installed.
