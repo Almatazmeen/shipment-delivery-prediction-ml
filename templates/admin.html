@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | ShipmentSure</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .admin-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 2rem;
+      background: var(--bg-card);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 2rem;
+    }
+    .admin-title {
+      font-size: 1.5rem;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .admin-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      padding: 0 2rem;
+    }
+    .admin-card {
+      background: var(--bg-input);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 16px;
+      padding: 2rem;
+      transition: all 0.3s;
+    }
+    .admin-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 0 20px rgba(14, 165, 233, 0.1);
+      transform: translateY(-5px);
+    }
+    .admin-card i {
+      font-size: 2.5rem;
+      color: var(--text-main);
+      margin-bottom: 1rem;
+    }
+    .admin-card h3 {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+    .admin-card p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container" style="display: block;">
+    
+    <nav class="admin-nav fade-in">
+      <div class="admin-title">
+        <i class="fas fa-network-wired"></i> System Admin
+      </div>
+      <div style="display: flex; gap: 1rem;">
+        <a href="{{ url_for('index') }}" class="cyber-btn outline" style="padding: 0.8rem 1.5rem;"><i class="fas fa-home"></i> Terminal</a>
+        <a href="{{ url_for('logout') }}" class="cyber-btn danger" style="padding: 0.8rem 1.5rem;"><i class="fas fa-power-off"></i> Disconnect</a>
+      </div>
+    </nav>
+
+    <div class="admin-cards-grid fade-in">
+      <div class="admin-card">
+        <i class="fas fa-users-cog"></i>
+        <h3>Operator Management</h3>
+        <p>Manage agent access levels and terminal permissions.</p>
+        <a href="{{ url_for('admin_users') }}" class="cyber-btn outline">Access Roster</a>
+      </div>
+      
+      <div class="admin-card">
+        <i class="fas fa-brain"></i>
+        <h3>AI Core Performance</h3>
+        <p>Monitor predictive accuracy and retrain neural nets.</p>
+        <button class="cyber-btn outline" onclick="alert('Module currently offline for maintenance.')">View Diagnostics</button>
+      </div>
+
+      <div class="admin-card">
+        <i class="fas fa-envelope-open-text"></i>
+        <h3>Alert Relays</h3>
+        <p>Configure SMTP gateways and notification rules.</p>
+        <a href="{{ url_for('admin_settings') }}" class="cyber-btn outline">Configure</a>
+      </div>
+    </div>
+    
+  </div>
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ShipmentSure | Predictive Logistics</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="app-container fade-in">
+    
+    <!-- Left Panel: Brand & Info -->
+    <div class="brand-panel">
+      <div>
+        <div class="brand-header">
+          <div class="brand-logo"><i class="fas fa-satellite-dish"></i></div>
+          <div class="brand-title">ShipmentSure</div>
+        </div>
+        
+        <p class="mission-text">
+          Advanced predictive analytics for logistics. Input shipment parameters to estimate delivery success probability and optimize supply chain operations.
+        </p>
+
+        <div class="status-module">
+          <h4><i class="fas fa-server"></i> System Status</h4>
+          <div class="status-item">
+            <div class="status-dot"></div>
+            Prediction Engine Online
+          </div>
+          <div class="status-item">
+            <div class="status-dot"></div>
+            Mapping Service Active
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <a href="{{ url_for('admin') }}" class="cyber-btn outline">
+          <i class="fas fa-terminal"></i> Admin Console
+        </a>
+      </div>
+    </div>
+
+    <!-- Right Panel: Mission Control -->
+    <div class="control-panel">
+      <div class="glass-card">
+        
+        <div class="card-header">
+          <h2><i class="fas fa-sliders-h"></i> Shipment Parameters</h2>
+        </div>
+        
+        <form action="{{ url_for('predict') }}" method="post">
+          <div class="dashboard-grid">
+            
+            <div class="input-group">
+              <label>Customer Care Calls</label>
+              <input type="number" name="customer_care_calls" required>
+            </div>
+            
+            <div class="input-group">
+              <label>Customer Rating (1-5)</label>
+              <input type="number" name="customer_rating" min="1" max="5" required>
+            </div>
+            
+            <div class="input-group">
+              <label>Product Cost ($)</label>
+              <input type="number" step="0.01" name="cost_of_product" required>
+            </div>
+            
+            <div class="input-group">
+              <label>Prior Purchases</label>
+              <input type="number" name="prior_purchases" required>
+            </div>
+            
+            <div class="input-group">
+              <label>Priority</label>
+              <select name="product_importance" required>
+                <option value="low">Low</option>
+                <option value="medium" selected>Medium</option>
+                <option value="high">High</option>
+              </select>
+            </div>
+            
+            <div class="input-group">
+              <label>Client Demographics</label>
+              <select name="gender" required>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </select>
+            </div>
+            
+            <div class="input-group">
+              <label>Discount Applied (%)</label>
+              <input type="number" name="discount_offered" step="0.01" required>
+            </div>
+            
+            <div class="input-group">
+              <label>Package Weight (g)</label>
+              <input type="number" name="weight_in_gms" required>
+            </div>
+            
+            <div class="input-group">
+              <label>Origin Warehouse</label>
+              <select name="warehouse_block" required>
+                <option value="A">Block A</option>
+                <option value="B">Block B</option>
+                <option value="C">Block C</option>
+                <option value="D">Block D</option>
+                <option value="E">Block E</option>
+                <option value="F">Block F</option>
+              </select>
+            </div>
+            
+            <div class="input-group">
+              <label>Transit Mode</label>
+              <select name="mode_of_shipment" required>
+                <option value="Air">Air Freight</option>
+                <option value="Ship">Ocean Freight</option>
+                <option value="Road">Ground Transport</option>
+              </select>
+            </div>
+
+            <div class="input-group full-width" style="margin-top: 1rem;">
+              <button class="cyber-btn" type="submit">
+                <i class="fas fa-bolt"></i> Execute Prediction
+              </button>
+            </div>
+
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>

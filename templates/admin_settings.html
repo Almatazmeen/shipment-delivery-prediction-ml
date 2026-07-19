@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alert Relays | ShipmentSure</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .admin-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 2rem;
+      background: var(--bg-card);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 2rem;
+    }
+    .admin-title { font-size: 1.5rem; color: var(--accent); }
+    
+    /* Toggle Switch */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 34px;
+    }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider {
+      position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+      background-color: var(--bg-input); transition: .4s; border-radius: 34px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .slider:before {
+      position: absolute; content: ""; height: 26px; width: 26px; left: 3px; bottom: 3px;
+      background-color: white; transition: .4s; border-radius: 50%;
+    }
+    input:checked + .slider { background-color: var(--accent-secondary); }
+    input:checked + .slider:before { transform: translateX(26px); }
+  </style>
+</head>
+<body>
+  <div class="app-container" style="display: block;">
+    
+    <nav class="admin-nav fade-in">
+      <div class="admin-title">
+        <i class="fas fa-envelope-open-text"></i> Alert Relays Configuration
+      </div>
+      <div style="display: flex; gap: 1rem;">
+        <a href="{{ url_for('admin') }}" class="cyber-btn outline" style="padding: 0.8rem 1.5rem;"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+      </div>
+    </nav>
+
+    <div class="dashboard-grid fade-in" style="padding: 0 2rem; max-width: 800px; margin: 0 auto;">
+      
+      <div class="glass-card" style="padding: 2.5rem; width: 100%;">
+        <h3><i class="fas fa-satellite-dish"></i> Transmission Settings</h3>
+        <p class="mission-text">Configure the SMTP alert system for shipment delays. Changes apply immediately to the current active session.</p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="flash-msg flash-{{ category }}">
+                <i class="fas fa-check-circle"></i> {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <form method="POST" style="margin-top: 2rem;">
+          
+          <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; padding: 1.5rem; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
+            <div>
+              <h4 style="margin-bottom: 0.2rem;">Master Alert Toggle</h4>
+              <p style="font-size: 0.85rem; color: var(--text-muted);">Enable or disable outgoing SMTP alerts.</p>
+            </div>
+            <div style="margin-left: auto;">
+              <label class="switch">
+                <input type="checkbox" name="enabled" {% if config.enabled %}checked{% endif %}>
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+          
+          <div class="input-group" style="margin-bottom: 1.5rem;">
+            <label>Receiver Email Address</label>
+            <input type="email" name="receiver" value="{{ config.receiver }}" required>
+          </div>
+          
+          <div class="input-group" style="margin-bottom: 1.5rem;">
+            <label>Sender Email (Read-Only)</label>
+            <input type="email" value="{{ config.sender }}" disabled style="opacity: 0.6; cursor: not-allowed;">
+          </div>
+          
+          <button type="submit" class="cyber-btn">
+            <i class="fas fa-save"></i> Save Configuration
+          </button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>

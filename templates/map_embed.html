@@ -1,0 +1,15 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Shipment Map</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h2>Shipment Route</h2>
+    <iframe src="{{ url_for('static', filename=map_file) }}" style="width:100%; height:600px; border:none;"></iframe>
+    <a href="{{ url_for('index') }}">🔙 Back</a>
+  </div>
+</body>
+</html>

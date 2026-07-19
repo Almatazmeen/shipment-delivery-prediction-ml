@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mission Status | ShipmentSure</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="app-container fade-in" style="justify-content: center; align-items: center; padding: 2rem;">
+    
+    <div class="glass-card" style="max-width: 800px;">
+      
+      <div class="result-header">
+        <h2><i class="fas fa-satellite"></i> Analysis Complete</h2>
+        
+        {% if prediction.startswith("Error") %}
+          <div class="result-status status-delay">
+            <i class="fas fa-exclamation-triangle"></i> System Fault
+          </div>
+          <p style="color: var(--danger); font-family: monospace;">{{ prediction }}</p>
+        {% else %}
+          <div class="result-status {% if binary == 1 %}status-success{% else %}status-delay{% endif %}">
+            {% if binary == 1 %}
+              <i class="fas fa-check-circle"></i> On Track
+            {% else %}
+              <i class="fas fa-radiation"></i> Delay Risk High
+            {% endif %}
+          </div>
+          <p class="mission-text">{{ prediction }}</p>
+        {% endif %}
+      </div>
+
+      {% if probability is defined and probability is not none %}
+        <div class="metrics-row">
+          <div class="metric-box">
+            {% if binary == 1 %}
+              <div class="metric-value">{{ (probability * 100)|round(1) }}%</div>
+              <div class="metric-label">On-Time Probability</div>
+            {% else %}
+              <div class="metric-value">{{ ((1 - probability) * 100)|round(1) }}%</div>
+              <div class="metric-label">Delay Probability</div>
+            {% endif %}
+          </div>
+          {% if email_status %}
+            <div class="metric-box" style="border-color: {% if email_status[0] %}var(--accent-secondary){% else %}var(--danger){% endif %};">
+              <div class="metric-value" style="font-size: 1.5rem; margin-top: 5px;">
+                <i class="fas {% if email_status[0] %}fa-envelope-circle-check{% else %}fa-circle-xmark{% endif %}"></i>
+              </div>
+              <div class="metric-label">
+                {% if email_status[0] %}Alert Sent{% else %}Alert Failed{% endif %}
+              </div>
+              {% if not email_status[0] %}
+                <div style="font-size:0.65rem; color:var(--danger); margin-top:4px; word-break:break-all;">{{ email_status[1] }}</div>
+              {% endif %}
+            </div>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% if shap_img %}
+        <div class="visual-section">
+          <h3><i class="fas fa-microchip"></i> AI Feature Influence (SHAP)</h3>
+          <img src="{{ url_for('static', filename='shap/' + shap_img) }}" alt="SHAP Diagnostic">
+        </div>
+      {% endif %}
+
+      <div class="dashboard-grid" style="margin-top: 2rem;">
+        {% if not prediction.startswith("Error") %}
+          <a href="{{ url_for('map_embed') }}" class="cyber-btn outline">
+            <i class="fas fa-map"></i> Launch Route Map
+          </a>
+        {% endif %}
+        <a href="{{ url_for('index') }}" class="cyber-btn {% if prediction.startswith('Error') %}full-width{% endif %}">
+          <i class="fas fa-undo"></i> New Scan
+        </a>
+      </div>
+
+    </div>
+
+  </div>
+</body>
+</html>

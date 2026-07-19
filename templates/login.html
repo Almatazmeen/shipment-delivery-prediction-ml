@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | ShipmentSure Terminal</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="auth-wrapper fade-in">
+    <div class="glass-card auth-card">
+      
+      <div class="auth-icon">
+        <i class="fas fa-fingerprint"></i>
+      </div>
+      <h2 style="margin-bottom: 2rem;">Terminal Access</h2>
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="flash-msg flash-{{ category }}">
+              <i class="fas fa-info-circle"></i> {{ message }}
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      <form method="POST">
+        <div class="input-group" style="text-align: left; margin-bottom: 1rem;">
+          <label>Agent ID</label>
+          <input type="text" name="username" placeholder="Username" required>
+        </div>
+        
+        <div class="input-group" style="text-align: left; margin-bottom: 2rem;">
+          <label>Passcode</label>
+          <input type="password" name="password" placeholder="Password" required>
+        </div>
+        
+        <button class="cyber-btn" type="submit">
+          <i class="fas fa-unlock"></i> Authenticate
+        </button>
+      </form>
+      
+      <p style="margin-top: 2rem; color: var(--text-muted); font-size: 0.85rem; font-family: monospace;">
+        SYS_ADMIN_DEF: admin / admin123
+      </p>
+      
+    </div>
+  </div>
+</body>
+</html>
