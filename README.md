@@ -1,106 +1,70 @@
-#  ShipmentSure: Predictive Logistics Control Center
+# ShipmentSure – Predictive Logistics Control Center
 
-ShipmentSure is an advanced, industry-level machine learning application designed to predict supply chain efficiency. It operates as a high-tech "Mission Control" dashboard that allows logistics operators to input shipment parameters and instantly receive an AI-driven probability of whether a package will arrive on time. 
+ShipmentSure is an AI-powered machine learning application that predicts whether a shipment will arrive on time. It combines predictive analytics with Explainable AI to provide transparent predictions and help identify high-risk shipments.
 
-Beyond simple predictions, ShipmentSure features Explainable AI (SHAP) to tell you *why* a decision was made, automated SMTP alert relays for high-risk shipments, dynamic route mapping, and a secure Role-Based Access Control (RBAC) Admin dashboard.
+## Live Demo
 
----
+https://shipment-delivery-prediction-ml.onrender.com/
 
-##  Technology Stack
+> The application is hosted on Render's free tier, so the first load may take a few moments.
 
-### Backend & Machine Learning
-* **Python 3**: Core programming language.
-* **Flask**: Lightweight web framework handling the routing, template rendering, and API logic.
-* **XGBoost**: High-performance gradient boosting library used for the core classification model (`xgboost_shipment_model.pkl`).
-* **SHAP (Shapley Additive exPlanations)**: Used for Explainable AI (XAI). It breaks down the XGBoost prediction to show exactly which features (e.g., package weight, customer rating) contributed positively or negatively to the outcome.
-* **Pandas / Joblib**: Data manipulation and model loading.
-* **SQLite3**: Lightweight relational database used to store operator credentials securely.
+## Key Features
 
-### Frontend
-* **HTML5 / Jinja2**: Templating engine for injecting Python variables into the web pages.
-* **Vanilla CSS3**: Custom-built "Glassmorphism" dark-mode tech aesthetic. Features CSS variables for theming, CSS grid/flexbox for responsive layouts, and keyframe animations.
-* **FontAwesome**: Iconography used throughout the dashboards.
+- Shipment delivery prediction using XGBoost
+- Prediction probability and confidence
+- Explainable AI using SHAP
+- Automated email alerts for high-risk shipments
+- Secure user authentication
+- Role-Based Access Control (RBAC)
+- Admin dashboard for user and alert management
 
-### Infrastructure & Security
-* **python-dotenv**: Environment variable management (securing SMTP passwords).
-* **Werkzeug Security**: Password hashing (`generate_password_hash`, `check_password_hash`) to ensure plain-text passwords are never stored in the database.
-* **smtplib & MIME**: Native Python libraries used to construct and send professional HTML-formatted email alerts via Gmail's SMTP servers.
+## Tech Stack
 
----
+- **Backend:** Python, Flask
+- **Machine Learning:** XGBoost
+- **Explainable AI:** SHAP
+- **Data Processing:** Pandas
+- **Database:** SQLite
+- **Frontend:** HTML, CSS, Jinja2
+- **Security:** Werkzeug Security
+- **Email Alerts:** SMTP
+- **Deployment:** Render
 
-## Project Structure & Architecture
+## How It Works
 
-```text
-ShipmentSure/
-│
-├── app.py                  # Core backend server, routing, and ML execution
-├── users.db                # SQLite database storing operator credentials/roles
-├── .env                    # Environment variables (SMTP credentials) - NOT COMMITTED
-│
-├── model/                  
-│   └── xgboost_shipment_model.pkl  # The pre-trained XGBoost Classifier
-│
-├── static/                 
-│   ├── css/
-│   │   └── style.css       # Core stylesheet (Dark mode dashboard aesthetic)
-│   ├── shap/               # Directory where generated SHAP plot images are saved
-│   └── maps/               # Directory where generated Folium HTML maps are saved
-│
-└── templates/              # Jinja2 HTML Templates
-    ├── login.html          # Authentication terminal
-    ├── index.html          # Main Mission Control input dashboard
-    ├── result.html         # Mission Status (Prediction, SHAP, Metrics)
-    ├── admin.html          # Admin Control Center hub
-    ├── admin_users.html    # Operator management (Add/Delete users)
-    └── admin_settings.html # Alert Relay configuration (Toggle emails)
-```
+1. The user logs into the application.
+2. Shipment details are entered through the prediction dashboard.
+3. The XGBoost model predicts the shipment delivery outcome.
+4. SHAP explains which factors influenced the prediction.
+5. High-risk shipments can automatically trigger email alerts.
+6. Administrators can manage users and alert settings through the Admin Dashboard.
 
----
+## Run Locally
 
-##  Core Functionality & Features
+Clone the repository:
 
-### 1. The Prediction Engine (`/predict`)
-Operators input 10 unique logistical parameters (e.g., Warehouse Block, Transit Mode, Prior Purchases, Discount Offered). The Flask backend passes this data to a Pandas DataFrame and feeds it to the XGBoost model. 
-* The model returns a binary classification (`0` = Delayed, `1` = On-Time).
-* It also returns a probability score (e.g., `99.9%` confidence of on-time delivery).
+git clone https://github.com/Almatazmeen/shipment-delivery-prediction-ml.git
 
-### 2. Explainable AI (SHAP Visualization)
-Instead of operating as a "black box," the application utilizes XGBoost's native `pred_contribs` API to calculate SHAP values. It generates a horizontal bar chart (`shap.bar_plot`) showing exactly how much each variable influenced the AI's final decision. This image is saved dynamically and displayed on the results page.
+Install dependencies:
 
-### 3. Automated Alert Relays (SMTP)
-If the AI detects a high risk of delay (binary prediction = `0`), the system automatically triggers an alert protocol. It logs into a secure Gmail SMTP server and sends a professionally formatted HTML email to the designated receiver, warning them of the potential supply chain bottleneck.
+pip install -r requirements.txt
 
+Run the application:
 
-### 4. Role-Based Access Control & Admin Panel
-The application is secured by a login portal. Users are verified against `users.db`. 
-* **Standard Users** can run predictions.
-* **Admins** have access to the `/admin` routes. Here, they can dynamically toggle the global SMTP email alerts on/off without restarting the server, update the receiver email, and manage the operator roster (creating new user accounts and deleting old ones).
+python app.py
 
----
+Then open:
 
-##  How to Run & Work on the Project
+http://127.0.0.1:5000
 
-### Prerequisites
-1. Python 3.8+ installed.
-2. Required packages: `pip install flask xgboost shap pandas folium python-dotenv`
+## Future Enhancements
 
-### Setup Instructions
-1. **Clone the Repository** and navigate to the root directory.
-2. **Environment Setup**: Create a `.env` file in the root directory and add your SMTP credentials:
-   ```env
-   SMTP_ENABLED=True
-   SMTP_SENDER=your_email@gmail.com
-   SMTP_APP_PASSWORD=your_16_digit_app_password
-   ```
-3. **Database Initialization**: The `users.db` is already created. The default admin credentials are `admin` / `admin123`. 
-4. **Run the Server**: 
-   ```bash
-   python app.py
-   ```
-5. **Access the App**: Open your browser and navigate to `http://127.0.0.1:5000`.
+- PostgreSQL integration
+- Automated model retraining
+- REST API development
+- CI/CD pipeline
+- Docker containerization
 
-### Future Development (For New Developers)
-If you are taking over this project, here are areas for immediate scaling:
-* **Database Migration**: Swap SQLite for PostgreSQL for cloud deployment (e.g., Render, Heroku).
-* **Model Retraining Pipeline**: Build an `/admin/retrain` route that accepts CSV uploads to continuously train the XGBoost model on new logistical data.
-* **REST API**: Separate the frontend from the backend by converting `app.py` into a pure JSON REST API or GraphQL endpoint.
+## Disclaimer
+
+This project was developed for educational and portfolio purposes. Machine learning predictions should not be used as the sole basis for real-world logistics decisions.
